@@ -1,0 +1,22 @@
+name: DoubleChest-Cancellor
+author: jasonwynn10
+version: 1.0.0
+api: [2.0.0, 1.13.1]
+main: jasonwynn10\Main
+description: ""
+commands:
+  dchest:
+    usage: "/dchest <enable|disable>"
+    permission: dchest.cmd 
+    description: "enable or disable double chests"
+permissions:
+  dchest.cmd
+    default: op
+    description: "parent dchest permission"
+    children:
+      enable.dchest.cmd:
+        default: op
+        description: "dchest enable permission"
+      disable.dchest.cmd:
+        default: op
+        description: "dchest disable permission"
