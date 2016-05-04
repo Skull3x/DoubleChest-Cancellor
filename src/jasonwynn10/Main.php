@@ -10,14 +10,11 @@ use pocketmine\block\Chest;
 use pocketmine\utils\TextFormat as TF;
 
 class Main extends PluginBase implements Listener{
-  
   public $active = true; // By default plugin feature is enabled
-  
   public function onEnable() {
     $this->getServer()->getPluginManager()->registerEvents($this, $this);
     $this->getLogger()->notice(TF::BOLD.TF::GREEN."Enabled!");
   }
-  
   public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
     if(strtolower($command->getName()) === "dchest") {
       // No args passed? Toggle
@@ -27,7 +24,6 @@ class Main extends PluginBase implements Listener{
         return true;
       }
       switch ( strtolower( $args[ 0 ] ) ) {
-        
         case '1':
         case 'on':
         case 'true':
@@ -36,7 +32,6 @@ class Main extends PluginBase implements Listener{
           $sender->sendMessage( "[DChest] Plugin activated" );
           return true;
           break;
-        
         case '0':
         case 'off':
         case 'false':
@@ -45,30 +40,20 @@ class Main extends PluginBase implements Listener{
           $sender->sendMessage( "[DChest] Plugin deactivated" );
           return true;
           break;
-        
         default:
           $sender->sendMessage( "[DChest] Could not resolve your request." );
           return false; // Send usage message.
           break;
       }
-      
     }
     return false;
   }
-  
-  /**
-   * @param \pocketmine\event\block\BlockPlaceEvent $event
-   * @priority HIGHEST
-   * @ignoreCancelled false
-   */
   public function onChestPlace(BlockPlaceEvent $event) {
     if($event->isCancelled()) return;
     if(!$this->activated) return;
     if(!$event->getBlock() instanceof Chest) return;
-    
     $player = $event->getPlayer();
     $chest = $event->getBlock();
-    
     for($side = 2; $side <= 5; ++$side){
       if(($chest->getDamage() === 4 or $chest->getDamage() === 5) and ($side === 4 or $side === 5)){
         continue;
@@ -76,16 +61,13 @@ class Main extends PluginBase implements Listener{
         continue;
       }
       $c = $chest->getSide($side);
-      
       if($c instanceof Chest and $c->getDamage() === $chest->getDamage()){
-        # Chests are about to get paired
         $event->setCancelled(true);
-        $player->sendPopup("Double chests are disabled"); // Tip currently doesn't work :/
+        $player->sendPopup(TF::RED."Double chests are disabled");
         break;
       }
     }
   }
-  
   public function onDisable() {
     $this->getLogger()->notice(TF::BOLD.TF::GREEN."Disabled!");
   }
