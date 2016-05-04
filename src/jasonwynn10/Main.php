@@ -10,43 +10,42 @@ use pocketmine\block\Chest;
 use pocketmine\utils\TextFormat as TF;
 
 class Main extends PluginBase implements Listener{
-  public $active = true; // By default plugin feature is enabled
+  public $active = true, $Cfg;
   public function onEnable() {
+    $this->getCfg();
     $this->getServer()->getPluginManager()->registerEvents($this, $this);
     $this->getLogger()->notice(TF::BOLD.TF::GREEN."Enabled!");
   }
   public function onCommand(CommandSender $sender, Command $command, $label, array $args) {
     if(strtolower($command->getName()) === "dchest") {
-      // No args passed? Toggle
       if(!isset($args[0])){
         $this->active = $this->active ? false : true;
         $sender->sendMessage(" [DChest] Plugin " . ( $this->active === false ? "de" : "" ) . "activated." );
         return true;
       }
-      switch ( strtolower( $args[ 0 ] ) ) {
-        case '1':
+      switch (strtolower($args[0])) {
         case 'on':
-        case 'true':
         case 'enable':
           $this->active = true;
           $sender->sendMessage( "[DChest] Plugin activated" );
           return true;
           break;
-        case '0':
         case 'off':
-        case 'false':
         case 'disable':
           $this->active = false;
           $sender->sendMessage( "[DChest] Plugin deactivated" );
           return true;
           break;
         default:
-          $sender->sendMessage( "[DChest] Could not resolve your request." );
-          return false; // Send usage message.
+          return false;
           break;
       }
     }
     return false;
+  }
+  public function getCfg() {
+    $this->saveDefaultConfig();
+    $this->Cfg = $this->getConfig();
   }
   public function onChestPlace(BlockPlaceEvent $event) {
     if($event->isCancelled()) return;
@@ -69,6 +68,6 @@ class Main extends PluginBase implements Listener{
     }
   }
   public function onDisable() {
-    $this->getLogger()->notice(TF::BOLD.TF::GREEN."Disabled!");
+    $this->getLogger()->notice(TF::GREEN."Disabled!");
   }
 }
